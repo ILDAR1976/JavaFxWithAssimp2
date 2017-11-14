@@ -7,10 +7,14 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import edu.lwjgl_fx_01.ui.model.engine.graph.NodeFx;
+import edu.lwjgl_fx_01.ui.model.engine.items.FeatureToggle;
+
 import static edu.lwjgl_fx_01.ui.utils.Utils.*;
 
+import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.transform.Affine;
+import javafx.scene.transform.Rotate;
 
 
 @SuppressWarnings("restriction")
@@ -59,9 +63,13 @@ public class Skeleton extends Parent {
     private static JointFx createJointFromNode(final NodeFx node, Map<String, JointFx> jointsMap) {
         JointFx joint = jointsMap.get(node.getId().trim());
         
-        //joint.createCubeMesh();
-        //joint.addMeshView();
-        
+		FeatureToggle.onDisplaySkeletonsChange(bool -> {
+			if (bool) {
+		        joint.createCubeMesh();
+		        joint.addMeshView();
+			} 
+		});
+       
         joint.setId(node.getId().trim());
         joint.setTransformations(node.getTransformations());
         

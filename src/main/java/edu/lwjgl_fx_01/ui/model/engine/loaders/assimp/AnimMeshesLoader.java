@@ -60,6 +60,7 @@ import  edu.lwjgl_fx_01.ui.utils.Utils.*;
 import edu.lwjgl_fx_01.ui.model.engine.graph.animation.AnimatedFrame;
 import edu.lwjgl_fx_01.ui.model.engine.graph.animation.Animation;
 import edu.lwjgl_fx_01.ui.model.engine.graph.animation.SkinningMeshTimer;
+import edu.lwjgl_fx_01.ui.model.engine.items.FeatureToggle;
 import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Affine;
 import javafx.animation.KeyFrame;
@@ -72,7 +73,7 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.CullFace;
 import javafx.scene.shape.DrawMode;
-
+import javafx.scene.Group;
 
 @SuppressWarnings({ "unchecked", "rawtypes", "unused", "restriction" })
 public class AnimMeshesLoader extends StaticMeshesLoader {
@@ -181,9 +182,21 @@ public class AnimMeshesLoader extends StaticMeshesLoader {
 		Map<String, Animation> animations = processAnimations(aiScene, jointsMap, rootNode);
 		buildTimelines(jointsMap, (Skeleton) hierarchy);
 		
-		rootNodeFx.getChildren().addAll(Arrays.asList(meshes));
 		
-		//rootNodeFx.getChildren().add(hierarchy);
+		FeatureToggle.onDisplayMeshsChange(bool -> {
+			if (bool) {
+				rootNodeFx.getChildren().addAll(Arrays.asList(meshes));
+			} 
+		});
+		
+		FeatureToggle.onDisplaySkeletonsChange(bool -> {
+			if (bool) {
+				Group skeletonGroup = new Group();
+				skeletonGroup.getTransforms().add(new Rotate(90, 0, 0, 0, Rotate.X_AXIS));
+				skeletonGroup.getChildren().add(hierarchy);
+				rootNodeFx.getChildren().add(skeletonGroup);
+			} 
+		});
 		
 		return rootNodeFx;
 	}
