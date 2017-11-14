@@ -63,15 +63,17 @@ public class MaterialFx {
         this.ambientLight = new AmbientLight(new Color(this.ambientColour.x, this.ambientColour.y, 
         											   this.ambientColour.z, this.ambientColour.w));
 		this.phongMaterial = new PhongMaterial();
-		//if (texture != null) this.phongMaterial.setDiffuseMap(texture.getImage());
+
 		if (texture != null) {
 			this.phongMaterial.setDiffuseMap(texture.getImage());
+		} else {
+			this.phongMaterial.setDiffuseColor(new Color(this.diffuseColour.x, this.diffuseColour.y, 
+				 this.diffuseColour.z, this.diffuseColour.w));
 		}
-		
-		this.phongMaterial.setDiffuseColor(new Color(this.diffuseColour.x, this.diffuseColour.y, 
-													 this.diffuseColour.z, this.diffuseColour.w));
+
 		this.phongMaterial.setSpecularColor(new Color(this.specularColour.x, this.specularColour.y, 
-						                              this.specularColour.z, this.specularColour.w));
+                this.specularColour.z, this.specularColour.w));
+
     }
 
     public Vector4f getAmbientColour() {

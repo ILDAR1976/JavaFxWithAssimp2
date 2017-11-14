@@ -34,15 +34,19 @@ import org.lwjgl.assimp.AIString;
 import org.lwjgl.assimp.AIVector3D;
 import org.lwjgl.assimp.Assimp;
 import edu.lwjgl_fx_01.ui.utils.Utils;
+import javafx.geometry.Point3D;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.CullFace;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.MeshView;
+import javafx.scene.shape.ObservableFaceArray;
 import javafx.scene.transform.Affine;
+import javafx.scene.transform.Rotate;
 import javafx.scene.shape.TriangleMesh;
 import javafx.scene.shape.VertexFormat;
+import javafx.scene.transform.Rotate;
 import edu.lwjgl_fx_01.ui.model.engine.SceneFx;
 import edu.lwjgl_fx_01.ui.model.engine.graph.MaterialFx;
 import edu.lwjgl_fx_01.ui.model.engine.shape3d.SkinningMesh;
@@ -92,13 +96,17 @@ public class StaticMeshesLoader {
 			
 			TriangleMesh mesh = new TriangleMesh();
 			mesh.getPoints().setAll(meshes[i].getPoints());
-			mesh.getNormals().setAll(meshes[i].getNormals());
 			mesh.getTexCoords().setAll(meshes[i].getTexCoords());
-			mesh.getFaces().setAll(meshes[i].getFaces());
-			if (meshes[i].getNormals().length == 0)
+			
+			
+			if (meshes[i].getNormals().length == 0) {
 				mesh.setVertexFormat(VertexFormat.POINT_TEXCOORD);
-			else	
+				mesh.getFaces().setAll(meshes[i].getFaces2());
+			} else	{
+				mesh.getNormals().setAll(meshes[i].getNormals());
+				mesh.getFaces().setAll(meshes[i].getFaces());
 				mesh.setVertexFormat(VertexFormat.POINT_NORMAL_TEXCOORD);
+			}
 			
 			final MeshView meshView = new MeshView(mesh);
 
@@ -115,8 +123,11 @@ public class StaticMeshesLoader {
 
 			meshes[i].getChildren().add(meshView);
 		}
+
 		mainScene.getChildren().addAll(Arrays.asList(meshes));
-        return mainScene;
+		mainScene.getTransforms().add(new Rotate(-180, 0, 0, 0, Rotate.Z_AXIS));
+
+		return mainScene;
     }
 
     protected void processIndices(AIMesh aiMesh, List<Integer> indices) {
@@ -137,14 +148,18 @@ public class StaticMeshesLoader {
         AIColor4D colour = AIColor4D.create();
 
         AIString path = AIString.calloc();
+        
         Assimp.aiGetMaterialTexture(aiMaterial, aiTextureType_DIFFUSE, 0, path, (IntBuffer) null,
                 null, null, null, null, null);
         String textPath = path.dataString();
+        
+        if (textPath.isEmpty()) return;
+        
         TextureFx texture = null;
         if (textPath != null && textPath.length() > 0) {
         	String textureFile = texturesDir + "/" + textPath;
             textureFile = textureFile.replace("//", "/");
-            System.out.println(textureFile);
+            //System.out.println(textureFile);
             texture = new TextureFx(0, 0, 0);
             texture.setImage(new javafx.scene.image.Image((new File(textureFile)).toURI().toString()));
         }
@@ -230,6 +245,43 @@ public class StaticMeshesLoader {
             vertices.add(aiVertex.y());
             vertices.add(aiVertex.z());
         }
+    }
+    
+    private void createNormals(TriangleMesh mesh, int normalsArrayLength) {
+        float[] normals = new float[normalsArrayLength];
+        final ObservableFaceArray faces = mesh.getFaces();
+        final int faceSize = mesh.getFaceElementSize();
+        final int pointSize = mesh.getPointElementSize();
+        for (int i = 0; i < faces.size() / faceSize ; i++) {
+            //System.out.println((i * faceSize + pointSize * 2) + " " + faceSize + " " + pointSize + " " + faces.size());
+        	final int ptIndex1 = faces.get(i * faceSize);
+            final int ptIndex2 = faces.get(i * faceSize + pointSize);
+            final int ptIndex3 = faces.get(i * faceSize + pointSize * 2);
+
+            // should the normal Index checked to be the same for all the face?
+            final int nlIndex = faces.get(i * faceSize + 1);
+
+            final Point3D p1 = getPoint(mesh, ptIndex1);
+            final Point3D p2 = getPoint(mesh, ptIndex2);
+            final Point3D p3 = getPoint(mesh, ptIndex3);
+            final Point3D newNormal = calculateNormal(p1, p2, p3);
+
+            normals[nlIndex * 3] = (float) newNormal.getX();
+            normals[nlIndex * 3 + 1] = (float) newNormal.getY();
+            normals[nlIndex * 3 + 2] = (float) newNormal.getZ();
+        }
+
+        mesh.getNormals().setAll(normals);
+    }
+    
+    private Point3D getPoint(TriangleMesh mesh, final int index) {
+        return new Point3D(mesh.getPoints().get(3 * index), mesh.getPoints().get(3 * index + 1), mesh.getPoints().get(3 * index + 2));
+    }
+    
+    private Point3D calculateNormal(final Point3D p1, final Point3D p2, final Point3D p3) {
+        final Point3D u = p2.subtract(p1);
+        final Point3D v = p3.subtract(p1);
+        return u.crossProduct(v).normalize();
     }
     
     public class TypeList {

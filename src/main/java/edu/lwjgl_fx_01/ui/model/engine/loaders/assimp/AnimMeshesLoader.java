@@ -55,7 +55,7 @@ import edu.lwjgl_fx_01.ui.model.engine.graph.NodeFx;
 import edu.lwjgl_fx_01.ui.model.engine.graph.NodeFx;
 import edu.lwjgl_fx_01.ui.model.engine.loaders.assimp.Skeleton;
 import edu.lwjgl_fx_01.ui.model.engine.graph.animation.AnimationFx;
-
+import javafx.scene.transform.Rotate;
 import  edu.lwjgl_fx_01.ui.utils.Utils.*;
 import edu.lwjgl_fx_01.ui.model.engine.graph.animation.AnimatedFrame;
 import edu.lwjgl_fx_01.ui.model.engine.graph.animation.Animation;
@@ -182,7 +182,8 @@ public class AnimMeshesLoader extends StaticMeshesLoader {
 		buildTimelines(jointsMap, (Skeleton) hierarchy);
 		
 		rootNodeFx.getChildren().addAll(Arrays.asList(meshes));
-		rootNodeFx.getChildren().add(hierarchy);
+		
+		//rootNodeFx.getChildren().add(hierarchy);
 		
 		return rootNodeFx;
 	}
@@ -334,9 +335,10 @@ public class AnimMeshesLoader extends StaticMeshesLoader {
 
 		List<Integer> verticeId = new ArrayList<>();
 		float[][] jointsPointsWeigthBuff = new float[numBones][numVertices];
-		System.out.println(
+/*		
+  		System.out.println(
 				"joint: numBones: " + numBones + " numVertices: " + numVertices + " exterpolate points: " + numVertices * 3);
-
+*/
 		maxBoneDimSize++;
 
 		for (Map.Entry<Integer, List<VertexWeight>> item : weightSet.entrySet()) {

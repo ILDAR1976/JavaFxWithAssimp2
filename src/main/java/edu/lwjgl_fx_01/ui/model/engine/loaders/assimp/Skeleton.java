@@ -12,6 +12,7 @@ import static edu.lwjgl_fx_01.ui.utils.Utils.*;
 import javafx.scene.Parent;
 import javafx.scene.transform.Affine;
 
+
 @SuppressWarnings("restriction")
 public class Skeleton extends Parent {
     public Map<String, JointFx> joints = new LinkedHashMap<>();
@@ -21,6 +22,7 @@ public class Skeleton extends Parent {
         final Skeleton skeleton = new Skeleton();
         skeleton.getTransforms().addAll(rootNode.getTransforms());
         skeleton.getChildren().addAll(rootNode.getChildren());
+        
         return skeleton;
     }
     
@@ -29,7 +31,7 @@ public class Skeleton extends Parent {
 
         // should the rootNode transforms be local to the parent or global?
         skeleton.getTransforms().addAll(rootNode.getTransforms());
-
+        
         final List<NodeFx> rootModelNodes = new ArrayList<>();
         
         rootModelNodes.addAll(rootNode.getNodeFxChildStream().
@@ -37,7 +39,7 @@ public class Skeleton extends Parent {
                 collect(Collectors.toList()));
         
         skeleton.getChildren().addAll(buildJoint(rootModelNodes, skeleton.joints, skeleton.bindTransforms, jointsMap));
-       
+        
         return skeleton;
     }
 

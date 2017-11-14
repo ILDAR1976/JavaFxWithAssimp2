@@ -107,6 +107,7 @@ public class MainFx3D extends Application {
 
 	public SceneFx ihaScene1;
 	public SceneFx ihaScene2;
+	public SceneFx ihaScene3;
 	
 	public static void main(String[] args) {
 		try {
@@ -121,6 +122,7 @@ public class MainFx3D extends Application {
 
 		assimpLoader1 = new AssimpLoader("./models/boblamp.md5mesh", "./models", false);
 		assimpLoader2 = new AssimpLoader("./models/monster.md5mesh", "./models", false);
+		assimpLoader3 = new AssimpLoader("./models/house/house.obj", "./models/house", true);
 
 	}
 
@@ -161,9 +163,10 @@ public class MainFx3D extends Application {
 
 		ihaScene1 = assimpLoader1.getScene();
 		ihaScene1.setTranslateX(-70);
-		
 		ihaScene2 = assimpLoader2.getScene();
-
+		ihaScene3 = assimpLoader3.getScene();
+		ihaScene3.setTranslateX(70);
+		
 		Group figure = new Group();
 		Group meshes = new Group();
 		Group test = new Group();
@@ -171,7 +174,7 @@ public class MainFx3D extends Application {
 		
 		switch (0) {
 		case 0:
-			root3D.getChildren().addAll(ihaScene1, ihaScene2); 
+			root3D.getChildren().addAll(ihaScene1, ihaScene2, ihaScene3); 
 			break;
 		case 1:	
 			root3D.getChildren().addAll(meshes);

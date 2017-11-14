@@ -19,6 +19,7 @@ public class MeshFx extends Group{
 	private float[] normals;
 	private float[] texCoords;
 	private int[]  faces;
+	private int[]  faces2;
 	private final float[][] jointsPointsWeights; 
 	private final Affine baseTransformMatrix;
 	private final Affine[] bindPosList;
@@ -106,13 +107,19 @@ public class MeshFx extends Group{
 		Object[] tcl = _tcl.toArray();
 
 		this.faces = new int[this.faces.length * 3];
+		this.faces2 = new int[this.faces.length * 2];
+		
 		int index = 0;
+		int index2 = 0;
 
 		for (int i : _fl) {
 			//System.out.println(i);
 			this.faces[index++] = i;
 			this.faces[index++] = i;
 			this.faces[index++] = (tcl.length != 0) ? i : 0;
+
+			this.faces2[index2++] = i;
+			this.faces2[index2++] = (tcl.length != 0) ? i : 0;
 		}
 		
 		index = 0;
@@ -191,4 +198,10 @@ public class MeshFx extends Group{
 	public Affine getBaseTransformMatrix() {
 		return baseTransformMatrix;
 	}
+
+	public int[] getFaces2() {
+		return faces2;
+	}
+	
+	
 }
