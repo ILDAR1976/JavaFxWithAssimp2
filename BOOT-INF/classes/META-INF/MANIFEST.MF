@@ -1,0 +1,1 @@
+Main-Class: edu.lwjgl_fx_01.basic.om.MainFx3D
