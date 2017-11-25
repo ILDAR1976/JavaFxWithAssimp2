@@ -4,3 +4,10 @@ SkinningMesh(список мешей,
              главная матрица трансформации, 
              список суставов, 
              арматура (дерево суставов));
+             
+SkinningMesh (list of mesh,
+              bones with weights of vertices,
+              list of inverse offset matrixes of bones,
+              the main transformation matrix,
+              list of joints,
+              armature (tree of joints));             
