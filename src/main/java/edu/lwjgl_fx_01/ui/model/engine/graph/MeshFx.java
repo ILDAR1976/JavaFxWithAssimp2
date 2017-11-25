@@ -98,7 +98,7 @@ public class MeshFx extends Group{
 			if (_tcl.size() * 3 % 2 == 0)
 				this.texCoords = new float[_tcl.size() * 3 ];
 			else
-				this.texCoords = new float[_tcl.size() * 3 ];
+				this.texCoords = new float[_tcl.size() * 3 + 1];
 		else 
 			this.texCoords = new float[2];
 		
